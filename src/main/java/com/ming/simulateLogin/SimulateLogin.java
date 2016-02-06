@@ -23,17 +23,21 @@ public class SimulateLogin {
 			return false;
 		
 		String pageContent = GetPageHtml.getPageHtml(loginPage);
+		
 		if(StringUtil.isBlank(pageContent)){
 			System.err.println("获取网页失败");
 			return false;
 		}
+		
+		System.out.println("获取网页成功");
+		
 		 try {
+			System.out.println("读取"+filePath+"信息到Map 中");
 			Map<String,String> map = PropertieUtil.getProperties(filePath);
 			for (Map.Entry<String, String> entry : map.entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
-			   System.out.println("key= " + key + " and value= " + value);
-			   if(StringUtil.isBlank(entry.getValue())){
+				if(StringUtil.isBlank(entry.getValue())){
 				   String valueFormPage = GetPageHtml.getInputValue(pageContent, key);
 				   PropertieUtil.writeProperties(filePath, key, valueFormPage);
 			   }
@@ -48,7 +52,7 @@ public class SimulateLogin {
 		if(!StringUtil.isBlank(captchaUrl)){
 			GetPageHtml.getAndSaveCaptcha(captchaUrl);
 			
-			System.out.println("输入验证码的值");
+			System.out.println("输入验证码的值：");
 			Scanner sc = new Scanner(System.in);
 			String inputCatchaValue=sc.next().trim();
 			System.out.println(inputCatchaValue);
@@ -80,17 +84,23 @@ public class SimulateLogin {
 			String captchaName = map.get("captcha.name");
 			String captchaValue = map.get("captcha.value");
 			formBuilder = formBuilder.add(captchaName, captchaValue);
-			System.out.println("key= " + captchaName + " and value= " + captchaValue);
+			System.out.println("====");
+			System.out.println("从配置文件中检测到验证码属性,放入请求中");
+			System.out.println("	key= " + captchaName + " and value= " + captchaValue);
+			System.out.println("====");
 			map.remove("captcha.name");
 			map.remove("captcha.value");
 		}
 		
+		System.out.println("++++");
+		System.out.println("最终提交数据为");
 		for (Map.Entry<String, String> entry : map.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			System.out.println("key= " + key + " and value= " + value);
 			formBuilder = formBuilder.add(key, value);
 		}
+		System.out.println("++++");
 		
 		RequestBody formBody = formBuilder.build();
 		Request login = new Request.Builder()
@@ -102,6 +112,7 @@ public class SimulateLogin {
 		Response execute;
 		try {
 			execute = GetPageHtml.client.newCall(login).execute();
+			System.out.println("返回结果为");
 			System.out.println(execute.body().string());
 		} catch (IOException e) {
 			System.err.println("IO异常");

@@ -45,7 +45,6 @@ public class PropertieUtil {
 					filePath));
 			pps.load(in);
 			String value = pps.getProperty(key);
-			System.out.println(key + " = " + value);
 			return value;
 
 		} catch (IOException e) {
@@ -60,11 +59,11 @@ public class PropertieUtil {
 		InputStream in = new BufferedInputStream(new FileInputStream(filePath));
 		pps.load(in);
 		Enumeration en = pps.propertyNames(); // 得到配置文件的名字
-
+		System.out.println("读取"+filePath);
 		while (en.hasMoreElements()) {
 			String strKey = (String) en.nextElement();
 			String strValue = pps.getProperty(strKey);
-			System.out.println(strKey + "=" + strValue);
+			//System.out.println("    "+strKey + "=" + strValue);
 		}
 
 	}
@@ -81,7 +80,7 @@ public class PropertieUtil {
 			while (en.hasMoreElements()) {
 				String strKey = (String) en.nextElement();
 				String strValue = pps.getProperty(strKey);
-				System.out.println(strKey + "=" + strValue);
+				//System.out.println("	"+strKey + "=" + strValue);
 				map.put(strKey, strValue);
 				
 			}

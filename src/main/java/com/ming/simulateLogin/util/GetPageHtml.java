@@ -60,7 +60,6 @@ public class GetPageHtml {
 	public static String getInputValue(String pageContent,String name){
 		Document parse = Jsoup.parse(pageContent);
 		String selectContent = "input[name="+name+"]";
-		System.err.println("+++  "+selectContent);
         String result = parse.select(selectContent).get(0).attr("value").trim();
         return result;
 	}
